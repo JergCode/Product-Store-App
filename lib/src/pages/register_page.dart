@@ -1,25 +1,25 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:product_store_app/src/blocs/provider.dart';
 import 'package:product_store_app/src/pages/home_page.dart';
-import 'package:product_store_app/src/pages/register_page.dart';
+import 'package:product_store_app/src/pages/login_page.dart';
 import 'package:product_store_app/src/providers/user_provider.dart';
 import 'package:product_store_app/src/utils/validators_utils.dart';
 
-class LoginPage extends StatefulWidget {
-  static const routeName = '/login';
+class RegisterPage extends StatefulWidget {
+  static const routeName = '/register';
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _RegisterPageState createState() => _RegisterPageState();
 }
 
-class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMixin {
+class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderStateMixin {
   final userProvider = new UserProvider();
+
   var _requesting = false;
 
   AnimationController animationController;
   Animation<double> animation;
+
   @override
   void initState() {
     super.initState();
@@ -31,20 +31,6 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
       parent: animationController,
       curve: Curves.linear,
     );
-    // para una animación que no se detenga
-    // animationController.addListener(() {
-    //   setState(() {
-    //     // if (animationController.status == AnimationStatus.completed) {
-    //       animationController.repeat();
-    //     }
-    //   });
-    // });
-  }
-
-  @override
-  void dispose() {
-    animationController.dispose();
-    super.dispose();
   }
 
   @override
@@ -134,7 +120,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
             child: Column(
               children: <Widget>[
                 Text(
-                  'Ingreso',
+                  'Register',
                   style: TextStyle(fontSize: 20),
                 ),
                 SizedBox(height: 30.0),
@@ -224,24 +210,24 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                         child: Icon(Icons.refresh),
                       ),
                       SizedBox(width: 10),
-                      Text('Logging in')
+                      Text('Signing up')
                     ],
                   )
-                : Text('Login'),
+                : Text('Register'),
           ),
-          onPressed: snapshot.hasData && !_requesting ? () => _login(bloc, context) : null,
+          onPressed: snapshot.hasData && !_requesting ? () => _register(bloc, context) : null,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
         );
       },
     );
   }
 
-  _login(LoginBloc bloc, BuildContext context) async {
+  _register(LoginBloc bloc, BuildContext context) async {
     animationController.forward();
     setState(() {
       _requesting = true;
     });
-    final resp = await userProvider.login(bloc.emailValue, bloc.passwordValue);
+    final resp = await userProvider.newUser(bloc.emailValue, bloc.passwordValue);
     setState(() {
       if (animationController.isAnimating) {
         animationController.stop();
@@ -257,15 +243,10 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
   Widget _buildNewAccountButton(BuildContext context) {
     return FlatButton(
       child: Text(
-        'Create new Account',
+        'Already have an account? Login',
         style: TextStyle(color: Colors.deepPurple),
       ),
-      onPressed: () => Navigator.pushReplacementNamed(context, RegisterPage.routeName),
-      // Navigator.push(
-      //   context,
-      //   // MaterialPageRoute(builder: (_) => RegisterPage()),
-      //   SlideFromRightAnimation(page: RegisterPage()),
-      // ),
+      onPressed: () => Navigator.pushReplacementNamed(context, LoginPage.routeName),
     );
   }
 }

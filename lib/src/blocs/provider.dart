@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:product_store_app/src/blocs/login_bloc.dart';
+import 'package:product_store_app/src/blocs/products_bloc.dart';
 export 'package:product_store_app/src/blocs/login_bloc.dart';
 
 class Provider extends InheritedWidget {
   final loginBloc = LoginBloc();
+  final _productBloc = ProductsBloc();
 
   static Provider _singleton;
 
@@ -18,5 +20,9 @@ class Provider extends InheritedWidget {
 
   static LoginBloc of(BuildContext context) {
     return context.dependOnInheritedWidgetOfExactType<Provider>().loginBloc;
+  }
+
+  static ProductsBloc ofProdBloc(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<Provider>()._productBloc;
   }
 }
